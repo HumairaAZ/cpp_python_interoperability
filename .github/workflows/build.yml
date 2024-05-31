@@ -33,9 +33,17 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake -Dpybind11_DIR=/usr/local/lib/python3.8/dist-packages/pybind11/share/cmake/pybind11 ..
+        cmake -DPYBIND11_DIR=$(python3 -m pybind11 --cmakedir) ..
         cmake --build .
-    - name: Test
+    - name: Move built module
       run: |
-        cd build
+        mkdir -p python_module
+        find build -name "*.so" -exec cp {} python_module/ \;
+    - name: Set Python Path
+      run: echo "PYTHONPATH=$(pwd)/python_module" >> $GITHUB_ENV
+    - name: Test
+      env:
+        PYTHONPATH: ${{ env.PYTHONPATH }}
+      run: |
+        cd python_module
         python3 -c "import example; print(example.add(1, 2))"
