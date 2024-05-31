@@ -1,27 +1,30 @@
 name: Build and Test
 
-   on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
-   jobs:
-     build:
-       runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-       steps:
-       - uses: actions/checkout@v2
-       - name: Set up Python
-         uses: actions/setup-python@v2
-         with:
-           python-version: '3.x'
-       - name: Install dependencies
-         run: |
-           sudo apt-get update
-           sudo apt-get install -y cmake g++ python3-dev
-           pip install pybind11
-       - name: Configure
-         run: cmake .
-       - name: Build
-         run: cmake --build .
-       - name: Test
-         run: |
-           echo 'import example; print(example.add(1, 2))' > test_script.py
-           python3 test_script.py
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++ python3-dev
+        pip install pybind11
+    - name: Configure
+      run: cmake .
+    - name: Build
+      run: cmake --build .
+    - name: Test
+      run: |
+        python3 -c "import example; print(example.add(1, 2))"
