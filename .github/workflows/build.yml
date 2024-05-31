@@ -31,21 +31,17 @@ jobs:
         sudo make install
     - name: Configure
       run: |
-        mkdir build
+        mkdir -p build
         cd build
         cmake -DPYBIND11_DIR=$(python3 -m pybind11 --cmakedir) ..
     - name: Build
       run: |
         cd build
         cmake --build .
-    - name: List build directory contents
-      run: |
-        ls build
-    - name: Set Python Path
-      run: echo "PYTHONPATH=$(pwd)/build:\$PYTHONPATH" >> $GITHUB_ENV
-    - name: Test
-      env:
-        PYTHONPATH: ${{ env.PYTHONPATH }}
+    - name: Install module
       run: |
         cd build
+        pip install .
+    - name: Test
+      run: |
         python3 -c "import example; print(example.add(1, 2))"
