@@ -29,14 +29,11 @@ jobs:
         cd build
         cmake .. -DPYBIND11_TEST=OFF
         sudo make install
-    - name: Configure
+    - name: Configure and Build
       run: |
         mkdir build
         cd build
         cmake -DPYBIND11_DIR=$(python3 -m pybind11 --cmakedir) ..
-    - name: Build
-      run: |
-        cd build
         cmake --build .
     - name: List build directory contents
       run: |
@@ -44,7 +41,7 @@ jobs:
     - name: Move built module
       run: |
         mkdir -p python_module
-        cp build/*.so python_module/
+        cp build/example*.so python_module/
     - name: Set Python Path
       run: echo "PYTHONPATH=$(pwd)/python_module" >> $GITHUB_ENV
     - name: Test
