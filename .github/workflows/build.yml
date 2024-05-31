@@ -35,7 +35,11 @@ jobs:
         cd build
         cmake -DPYBIND11_DIR=$(python3 -m pybind11 --cmakedir) ..
         cmake --build .
+    - name: Set Python Path
+      run: echo "PYTHONPATH=$(pwd)/build" >> $GITHUB_ENV
     - name: Test
+      env:
+        PYTHONPATH: ${{ env.PYTHONPATH }}
       run: |
         cd build
         python3 -c "import example; print(example.add(1, 2))"
