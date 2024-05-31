@@ -42,9 +42,10 @@ jobs:
       run: |
         ls build
     - name: Set Python Path
-      run: echo "PYTHONPATH=$(pwd)/build" >> $GITHUB_ENV
+      run: echo "PYTHONPATH=$(pwd)/build:\$PYTHONPATH" >> $GITHUB_ENV
     - name: Test
       env:
         PYTHONPATH: ${{ env.PYTHONPATH }}
       run: |
+        cd build
         python3 -c "import example; print(example.add(1, 2))"
