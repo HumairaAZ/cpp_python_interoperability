@@ -21,14 +21,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y cmake g++ python3-dev
         pip install pybind11
-    - name: Install pybind11
-      run: |
-        git clone https://github.com/pybind/pybind11.git
-        cd pybind11
-        mkdir build
-        cd build
-        cmake .. -DPYBIND11_TEST=OFF
-        sudo make install
     - name: Configure and Build
       run: |
         mkdir build
@@ -44,8 +36,12 @@ jobs:
         find build -name "*.so" -exec cp {} python_module/ \;
     - name: Set Python Path
       run: echo "PYTHONPATH=$(pwd)/python_module" >> $GITHUB_ENV
+    - name: List python_module contents
+      run: |
+        ls python_module
+
     - name: Test
       env:
         PYTHONPATH: ${{ env.PYTHONPATH }}
       run: |
-        PYTHONPATH=python_module python3 -c "import example; print(example.add(1, 2))"
+        python3 -c "import example; print(example.add(1, 2))"
