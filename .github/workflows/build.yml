@@ -38,10 +38,13 @@ jobs:
     - name: List build directory contents
       run: |
         ls build
+    - name: List build directory contents again
+      run: |
+        find build
     - name: Move built module
       run: |
         mkdir -p python_module
-        cp build/example*.so python_module/
+        find build -name "*.so" -exec cp {} python_module/ \;
     - name: Set Python Path
       run: echo "PYTHONPATH=$(pwd)/python_module" >> $GITHUB_ENV
     - name: Test
