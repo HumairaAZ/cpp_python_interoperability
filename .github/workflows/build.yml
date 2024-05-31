@@ -38,7 +38,10 @@ jobs:
       run: |
         cd build
         cmake --build .
+    - name: Set Python Path
+      run: echo "$(pwd)/build" >> $GITHUB_ENV
     - name: Test
+      env:
+        PYTHONPATH: ${{ env.PYTHONPATH }}
       run: |
-        cd build
         python3 -c "import example; print(example.add(1, 2))"
