@@ -30,9 +30,15 @@ jobs:
         cmake .. -DPYBIND11_TEST=OFF
         sudo make install
     - name: Configure
-      run: cmake .. -DPYBIND11_DIR=$(python3 -m pybind11 --cmakedir)
+      run: |
+        mkdir build
+        cd build
+        cmake -DPYBIND11_DIR=$(python3 -m pybind11 --cmakedir) ..
     - name: Build
-      run: cmake --build .
+      run: |
+        cd build
+        cmake --build .
     - name: Test
       run: |
+        cd build
         python3 -c "import example; print(example.add(1, 2))"
